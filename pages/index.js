@@ -1,16 +1,13 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import { useEffect, useState } from 'react'
+import { useEffect, useReducer, useState } from 'react'
 
 export default function Home() {
 
+  // useState Example
   const [name, setName] = useState('')
-  const [counter, setCounter] = useState(0)
-  const [show, setShow] = useState(false)
-
-  // useEffect(()  => {
-  //   alert(`hello ${name}`)
-  // })
+  // const [counter, setCounter] = useState(0)
+  // const [show, setShow] = useState(false)
   const hitung = () => {
     setCounter(counter + 1)
   }
@@ -18,6 +15,25 @@ export default function Home() {
   //   setName(e.target.value)
   // }
 
+  // useEffect Example
+  // useEffect(()  => {
+  //   alert(`hello ${name}`)
+  // })
+
+  // useReducer Example 
+  // Note : reducer function must be on top of useReducer hook
+  const reducer = (state, action) => {
+    switch (action.type) {
+      case "increment":
+        return { counter: state.counter + 1, show: state.show }
+      case "toggleShow":
+        return { counter: state.counter, show: !state.show }
+      default:
+        return state
+    }
+  }
+  const [state, dispatch] = useReducer(reducer,
+    { counter: 0, show: true })
 
   return (
     <div className='h-screen'>
@@ -28,7 +44,7 @@ export default function Home() {
       </Head>
       <main>
         <div className='h-screen flex flex-col items-center justify-center'>
-          {show &&
+          {state.show &&
             <h1 className='text-white text-3xl font-medium' placeholder='Hi Mom!'>
               Hello {name}
             </h1>}
@@ -39,13 +55,13 @@ export default function Home() {
           />
           <button className=' mt-2 px-3 py-1 border rounded-md text-white'
             onClick={() => {
-              setCounter(counter + 1);
-              setShow(!show);
+              dispatch({ type: 'increment' })
+              dispatch({ type: 'toggleShow' })
             }}>
             Increment
           </button>
           <h2 className='text-white'>
-            {counter}
+            {state.counter}
           </h2>
         </div>
       </main >
